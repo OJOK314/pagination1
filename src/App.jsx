@@ -11,15 +11,17 @@ function App() {
 useEffect( async()=>{
   const response = await axios.get("https://jsonplaceholder.typicode.com/posts")
   setCoinsData(response,data)
-})
+}, [])
 
- 
+ const lastPostsIndex = currentPage*postsPerPage
+ const firstpostsIndex = lastPostsIndex-postsPerPage
+ const currentPosts = coinsData.slice(lastPostsIndex,firstpostsIndex)
 
   return (
     <>
       <h2>Hello Uganad</h2>
 
-    <cryToList coinsData={coinsData}/>
+    <cryToList coinsData={currentPosts}/>
     </>
   );
 }

@@ -1,18 +1,27 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './App.css';
 
-import './App.css'
-<style>
-
-</style>
 
 function App() {
+  const [coinsData,setCoinsData] = useState([])
+  const [currentPage,setCurrentPage] = useState(1)
+  const [postsPerPage,setPostsPerPer] = useState(8)
+  
+useEffect( async()=>{
+  const response = await axios.get("https://jsonplaceholder.typicode.com/posts")
+  setCoinsData(response,data)
+})
+
  
 
   return (
     <>
-     <h1 className='h1'> hello word</h1>
+      <h2>Hello Uganad</h2>
+
+    <cryToList coinsData={coinsData}/>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

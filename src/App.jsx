@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Pagination from './components/Pagination';
+import Table from './components/Table';
 import './App.css';
+// import TypesExample from './components/Bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import ColorSchemesExample from './components/Navbar';
+import Searchbar from './components/Searchbar';
 
 function App() {
   const [coinsData, setCoinsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(4);
+  const [postsPerPage] = useState(6); // slightly more for large screens
+  const [loading,setLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       const response = await axios.get("https://jsonplaceholder.typicode.com/posts");
       setCoinsData(response.data);
+      setLoading(false)
     };
-
-    fetchData(); // ✅ FIXED
+    fetchData();
   }, []);
 
   const lastPostsIndex = currentPage * postsPerPage;
@@ -22,61 +29,49 @@ function App() {
   const currentPost = coinsData.slice(firstPostsIndex, lastPostsIndex);
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Hello Uganda 🇺🇬</h2>
+    <div className="container">
 
-      <div style={styles.postsContainer}>
+      <ColorSchemesExample />
+
+      <h2 className="text-center my-4">Hello Uganda 🇺🇬</h2>
+
+      {/* Responsive Grid */}
+      <div className="row g-3">
         {currentPost.map(post => (
-          <div key={post.id} style={styles.card}>
-            <h4 style={styles.cardTitle}>{post.title}</h4>
-            <p style={styles.cardBody}>{post.body}</p>
+          <div key={post.id} className="col-12 col-sm-6 col-lg-4">
+            <div className="card h-100 shadow-sm">
+              <div className="card-body">
+                <h5 className="card-title">{post.title}</h5>
+                <p className="card-text">{post.body}</p>
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
-      <Pagination 
-        totalPosts={coinsData.length} 
-        postsPerPage={postsPerPage} 
-        setCurrentPage={setCurrentPage}
-      />
+      {/* Pagination */}
+      <div className="d-flex justify-content-center mt-4">
+        <Pagination 
+          totalPosts={coinsData.length} 
+          postsPerPage={postsPerPage} 
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
+
+      {/* Table & Other Components */}
+      <div className="mt-5">
+        <Table />
+      </div>
+
+      <div className="mt-4">
+        {/* <TypesExample /> */}
+      </div>
+
+<Searchbar/>
     </div>
+
   );
 }
 
-// 🎨 Internal styles
-const styles = {
-  container: {
-    maxWidth: '900px',
-    margin: '0 auto',
-    padding: '20px',
-    fontFamily: 'Arial, sans-serif'
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: '20px',
-    color: '#333'
-  },
-  postsContainer: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '15px',
-    marginBottom: '20px'
-  },
-  card: {
-    padding: '15px',
-    borderRadius: '10px',
-    backgroundColor: '#f5f5f5',
-    boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
-  },
-  cardTitle: {
-    fontSize: '16px',
-    marginBottom: '8px',
-    color: '#222'
-  },
-  cardBody: {
-    fontSize: '14px',
-    color: '#555'
-  }
-};
 
 export default App;
